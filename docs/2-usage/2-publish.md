@@ -97,7 +97,7 @@ paths:
 
 ### RTSP clients
 
-RTSP is a protocol that allows to publish and read streams. It supports several underlying transport protocols and allows to encrypt streams in transit (see [RTSP-specific features](rtsp-specific-features)). In order to publish a stream to the server with the RTSP protocol, use this URL:
+RTSP is a protocol that allows to publish and read streams. It supports several underlying transport protocols and encryption (see [RTSP-specific features](rtsp-specific-features)). In order to publish a stream to the server with the RTSP protocol, use this URL:
 
 ```
 rtsp://localhost:8554/mystream
@@ -335,7 +335,7 @@ docker run --rm -it \
 bluenviron/mediamtx:latest-rpi
 ```
 
-Be aware that precompiled binaries and Docker images are not compatible with cameras that require a custom `libcamera` (like some ArduCam products), since they come with a bundled `libcamera`. If you want to use a custom one, you can [compile from source](/docs/compile#custom-libcamera).
+Be aware that precompiled binaries and Docker images are not compatible with cameras that require a custom `libcamera` (like some ArduCam products), since they come with a bundled `libcamera`. If you want to use a custom one, you can [compile from source](/docs/other/compile#custom-libcamera).
 
 Camera settings can be changed by using the `rpiCamera*` parameters:
 
