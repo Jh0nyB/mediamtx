@@ -236,6 +236,7 @@ type Conf struct {
 	AuthMethods           *RTSPAuthMethods `json:"authMethods,omitempty"` // deprecated
 	RTSPAuthMethods       RTSPAuthMethods  `json:"rtspAuthMethods"`
 	RTSPUDPReadBufferSize uint             `json:"rtspUDPReadBufferSize"`
+	RTSPAutoAddDefaultPort *bool           `json:"rtspAutoAddDefaultPort"`
 
 	// RTMP server
 	RTMP           bool       `json:"rtmp"`
@@ -380,6 +381,9 @@ func (conf *Conf) setDefaults() {
 	conf.RTSPServerKey = "server.key"
 	conf.RTSPServerCert = "server.crt"
 	conf.RTSPAuthMethods = RTSPAuthMethods{auth.VerifyMethodBasic}
+	// Set default to true to maintain backward compatibility
+	rtspAutoAddDefaultPort := true
+	conf.RTSPAutoAddDefaultPort = &rtspAutoAddDefaultPort
 
 	// RTMP server
 	conf.RTMP = true

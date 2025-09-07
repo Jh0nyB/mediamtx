@@ -151,8 +151,9 @@ type Path struct {
 	SourceProtocol        *RTSPTransport `json:"sourceProtocol,omitempty"`      // deprecated
 	SourceAnyPortEnable   *bool          `json:"sourceAnyPortEnable,omitempty"` // deprecated
 	RTSPRangeType         RTSPRangeType  `json:"rtspRangeType"`
-	RTSPRangeStart        string         `json:"rtspRangeStart"`
-	RTSPUDPReadBufferSize uint           `json:"rtspUDPReadBufferSize"`
+	RTSPRangeStart         string `json:"rtspRangeStart"`
+	RTSPUDPReadBufferSize  uint   `json:"rtspUDPReadBufferSize"`
+	RTSPAutoAddDefaultPort *bool  `json:"rtspAutoAddDefaultPort"`
 
 	// MPEG-TS source
 	MPEGTSUDPReadBufferSize uint `json:"mpegtsUDPReadBufferSize"`
@@ -272,6 +273,10 @@ func (pconf *Path) setDefaults() {
 	pconf.RPICameraSoftwareH264Profile = "baseline"
 	pconf.RPICameraSoftwareH264Level = "4.1"
 	pconf.RPICameraMJPEGQuality = 60
+
+	// RTSP source
+	rtspAutoAddDefaultPort := true
+	pconf.RTSPAutoAddDefaultPort = &rtspAutoAddDefaultPort
 
 	// Hooks
 	pconf.RunOnDemandStartTimeout = 10 * Duration(time.Second)

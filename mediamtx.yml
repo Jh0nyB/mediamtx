@@ -538,6 +538,10 @@ pathDefaults:
   # This can be increased to mitigate packet losses.
   # It defaults to the default value of the operating system.
   rtspUDPReadBufferSize: 0
+  # Automatically add port :554 to RTSP URLs when not specified.
+  # Set to false for IPv6 cameras that don't work with explicit port.
+  # Default: true (maintains current behavior)
+  rtspAutoAddDefaultPort: true
 
   ###############################################
   # Default path settings -> MPEG-TS source (when source is MPEG-TS)

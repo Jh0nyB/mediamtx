@@ -2,6 +2,9 @@
 package rtsp
 
 import (
+	"net"
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/bluenviron/gortsplib/v4"
@@ -15,6 +18,36 @@ import (
 	"github.com/bluenviron/mediamtx/internal/protocols/rtsp"
 	"github.com/bluenviron/mediamtx/internal/protocols/tls"
 )
+
+// processRTSPURL processes an RTSP URL based on configuration settings
+func processRTSPURL(rawURL string, autoAddPort bool) (string, error) {
+	// If auto-add port is disabled, return URL as-is
+	if !autoAddPort {
+		return rawURL, nil
+	}
+
+	// Parse the URL to check if port is already specified
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return rawURL, err
+	}
+
+	// If port is already specified, return as-is
+	if u.Port() != "" {
+		return rawURL, nil
+	}
+
+	// Add default port 554 for RTSP
+	if strings.Contains(u.Host, ":") {
+		// IPv6 address - use net.JoinHostPort for proper formatting
+		u.Host = net.JoinHostPort(u.Host, "554")
+	} else {
+		// IPv4 address or hostname
+		u.Host = u.Host + ":554"
+	}
+
+	return u.String(), nil
+}
 
 func createRangeHeader(cnf *conf.Path) (*headers.Range, error) {
 	switch cnf.RTSPRangeType {
@@ -116,7 +149,18 @@ func (s *Source) Run(params defs.StaticSourceRunParams) error {
 	decodeErrors.Start()
 	defer decodeErrors.Stop()
 
-	u, err := base.ParseURL(params.ResolvedSource)
+	// Process the RTSP URL based on configuration
+	autoAddPort := true
+	if params.Conf.RTSPAutoAddDefaultPort != nil {
+		autoAddPort = *params.Conf.RTSPAutoAddDefaultPort
+	}
+
+	processedURL, err := processRTSPURL(params.ResolvedSource, autoAddPort)
+	if err != nil {
+		return err
+	}
+
+	u, err := base.ParseURL(processedURL)
 	if err != nil {
 		return err
 	}
